@@ -1,5 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { Database } from '../../database/database';
+import { urlencoded } from 'body-parser';
 
 export class Permission {
     private jwtToken: any;
@@ -15,10 +16,11 @@ export class Permission {
             const username = manuallyDefinedUsername || decodedToken.username;
 
             const userrole = await this.database.executeSQL(`SELECT role From users WHERE username = "${username}"`);
-
-            const check = await this.database.executeSQL(`SELECT ${role} FROM roles WHERE rolename = "${userrole[0].role}"`);
+            
+            const check = await this.database.executeSQL(`SELECT ${role} FROM roles_permissions WHERE rolename = "${userrole[0].role}"`);
+            
             const roleValue = check[0][role];
-
+            
             if (roleValue === 1) {
                 return true;
             } else {

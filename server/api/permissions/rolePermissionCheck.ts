@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { Database } from '../../database/database';
 
-export class permission {
+export class Permission {
     private jwtToken: any;
     database: Database
 

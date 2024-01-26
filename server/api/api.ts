@@ -3,7 +3,8 @@ import { Database } from '../database/database';
 import * as jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser'
-import { permission } from './permissions/rolePermissionCheck'; 
+import { Permission } from './permissions/rolePermissionCheck'; 
+import { Post } from './post/post'
 
 // get config vars
 dotenv.config();
@@ -15,17 +16,19 @@ export class API {
   // Properties
   app: Express
   database: Database
+  post: Post
 
   // Constructor
   constructor(app: Express) {
     this.app = app
     this.database = new Database();
+    this.post = new Post();
 
     this.app.post('/login', this.checkUser);
     this.app.post('/register', this.registerUser);
     this.app.post('/permission', this.adminCheck);
     this.app.post('/createPost', this.newPost);
-    
+    this.app.get('/getPost', this.getAllPost)
   }
 
 
@@ -35,7 +38,7 @@ export class API {
     bodyParser.json()(req, res, async () => {
       const { jwtToken } = req.body;
 
-      const permission = new permission(jwtToken);  
+      const permission = new Permission(jwtToken);  
       
       const permissionUser = await permission.checkRolePermissions('testbutton');
       console.log('Is Admin:', permissionUser);
@@ -46,15 +49,10 @@ export class API {
 
 
 
-
   private newPost = (req: Request, res: Response) => {
     bodyParser.json()(req, res, async () => {
-      const { postMessage } = req.body;
-      console.log(postMessage)
-
-      await this.database.executeSQL(
-        `INSERT INTO tweets (user_id, content) VALUES (1, "${postMessage}")`
-      )
+      const { postMessage, jwtToken } = req.body;
+      this.post.savePost(postMessage, jwtToken);
     });
   }
 
@@ -73,6 +71,20 @@ export class API {
 
     });
   }
+
+  private getAllPost = async (req: Request, res: Response) => {
+    bodyParser.json()(req, res, async () => {
+      try {
+        const allpost = await this.post.getPost();
+        console.log(allpost);
+        res.status(200).json({ allpost });
+      } catch (error) {
+        console.error('Fehler beim Abrufen aller Posts', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
+  }
+
 
   private checkUser = (req: Request, res: Response) => {
     bodyParser.json()(req, res, async () => {

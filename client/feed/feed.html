@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <script src="feed.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Typescript Starter</title>
+  </head>
+  <body class="bg-gray-900">
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-fuchsia-900 to-violet-900 p-4 text-white fixed w-full">
+        <div class="container mx-auto">
+            <h1 class="text-2xl font-bold">Your Feed</h1>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="w-full h-screen bg-gray-900 justify-center flex items-center flex flex-col">
+      
+      <div id="Feedwindow" class="w-full h-96 bg-gradient-to-r rounded-lg mb-1/2">
+        
+        <div class="dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4 w-1/2 mx-auto">
+            <div>
+                <span class="font-semibold text-white">Username</span>
+            </div>
+            <p class="text-white">This is a sample post. Hello, world!</p>
+            <div class="mt-2">
+                <button class="text-blue-500 hover:underline">Like</button>
+                <button class="text-gray-500 hover:underline ml-2">Comment</button>
+            </div>
+        </div>
+  
+    </div>
+
+      <div class="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-1/2 dark:bg-gray-800 p-4 rounded-lg shadow-md">
+          <textarea placeholder="What's happening?" class="w-full p-2 mb-2 resize-none dark:bg-gray-700 dark:text-white rounded-lg" rows="3" id="postTextarea"></textarea>
+        <button class="bg-blue-500 text-white py-2 px-4 rounded-full" id="postButton">Post</button>
+      </div>
+
+    </div>
+</body>
+</html>

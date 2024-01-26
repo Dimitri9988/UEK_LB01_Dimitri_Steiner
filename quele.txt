@@ -1,0 +1,10 @@
+https://www.digitalocean.com/community/tutorials/nodejs-jwt-expressjs
+
+https://www.w3schools.com/jsref/prop_win_localstorage.asp
+
+https://tailwindcss.com/
+
+https://github.com/Dimitri9988/Modul321_Projekt.git
+
+Test AB06 von ük223^
+

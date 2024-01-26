@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <script src="client.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Typescript Starter</title>
+  </head>
+  <body class="bg-gray-900">
+    <div class="justify-center flex items-center flex flex-col">
+      <h1 class="text-4xl font-bold text-white">Anmeldung</h1>
+      <div class="w-80 h-full bg-gradient-to-r from-violet-900 to-fuchsia-900 rounded-lg m-11 p-4 flex flex-col justify-around">
+        <form id="loginForm" class="flex flex-col space-y-4">
+          <label for="loginUsername" class="text-white">Benutzername:</label>
+          <input class="p-2 rounded bg-white text-black" type="text" id="loginUsername" required>
+          
+          <label for="loginPassword" class="text-white">Passwort:</label>
+          <input class="p-2 rounded bg-white text-black" type="password" id="loginPassword" required>
+      
+          <button class="bg-blue-500 text-white px-4 py-2 rounded w-auto" type="submit" id="registerButton">Anmelden</button>
+          <button class="bg-blue-500 text-white px-4 py-2 rounded w-auto" type="submit" id="registerNavigationButton">Zur Registrirung gehen...</button>
+        </form>
+      </div>
+
+      <button class="bg-blue-500 text-white px-4 py-2 rounded ml-2 w-auto" id="AdminButton">Nur Admin</button>
+    </div>
+  </body>
+</html>

@@ -24,17 +24,7 @@ const roletest = async () => {
   }
 };
 
-
-
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
-  
-
-
-
   const postWindow = document.getElementById('Feedwindow');
   const showTweets = async () => {
     try {
@@ -47,8 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (respons.ok) {
         const result = await respons.json();
         const { allpost } = result;
-        const permissionsCheckResult = await roletest()
-        ;
+        const permissionsCheckResult = await roletest();
         for (let i = 0; i < allpost.length; i++) {
           if (permissionsCheckResult === true) {
             const post = `
@@ -58,7 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <p class="text-white">${allpost[i].content}</p>
             <div class="mt-2">
-                <button class="text-blue-500 hover:underline">Like</button>
+                <p class="text-white">${allpost[i].post_like}</p>
+                <button class="text-blue-500 hover:underline" name="likeButton" id="${allpost[i].tweet_id}">Like</button>
                 <button class="text-gray-500 hover:underline ml-2">Comment</button>
                 <button class="text-red-500 hover:underline ml-2" name="deleteButton" id="${allpost[i].tweet_id}">Delete</button>
             </div>
@@ -73,7 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <p class="text-white">${allpost[i].content}</p>
             <div class="mt-2">
-                <button class="text-blue-500 hover:underline">Like</button>
+                <p class="text-white">${allpost[i].post_like}</p>
+                <button class="text-blue-500 hover:underline" name="likeButton" id="${allpost[i].tweet_id}">Like</button>
                 <button class="text-gray-500 hover:underline ml-2">Comment</button>
             </div>
         </div>
@@ -89,10 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
   showTweets();
-
-  
-
-
 
   document.getElementById('postButton').addEventListener('click', async (event) => {
     event.preventDefault();
@@ -115,15 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Netzwerkfehler:', error);
     }
   });
+
   document.getElementById('Feedwindow').addEventListener('click', async (event) => {
-    const target = event.target;
-    
-    if (target.classList.contains('text-red-500') && target.getAttribute('name') === 'deleteButton') {
-      
-      
-      
+    const { target } = event;
+
+    if (target.getAttribute('name') === 'deleteButton') {
       const postId = target.id;
-      
+
       try {
         const response = await fetch('http://localhost:4200/deletePost', {
           method: 'DELETE',
@@ -140,12 +125,24 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (error) {
         console.error('Netzwerkfehler:', error);
       }
-
-
-
-
-
-
+    } else if (target.getAttribute('name') === 'likeButton') {
+      const postId = target.id;
+      try {
+        const response = await fetch('http://localhost:4200/like', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ postId }),
+        });
+        if (response.ok) {
+          console.log('Like erfolgreich gespeichert');
+        } else {
+          console.error('Fehler beim liken des Postes:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Netzwerkfehler:', error);
+      }
     }
   });
 });

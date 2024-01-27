@@ -14,14 +14,14 @@ export class Post {
 
         const userId = await this.database.executeSQL(`SELECT id From users WHERE username = "${username}"`);
         await this.database.executeSQL(
-            `INSERT INTO tweets (user_id, content) VALUES (${userId[0].id}, "${message}")`
+            `INSERT INTO tweets (user_id, content, post_like) VALUES (${userId[0].id}, "${message}", 0)`
         )
           
     }
 
     public getPost = async () => {
         const postDatas = await this.database.executeSQL(
-            `SELECT users.id AS user_id, users.username as username, tweets.id AS tweet_id, tweets.content FROM users JOIN tweets ON users.id = tweets.user_id;`
+            `SELECT users.id AS user_id, users.username as username, tweets.id AS tweet_id, tweets.post_like AS post_like, tweets.content FROM users JOIN tweets ON users.id = tweets.user_id;`
         )
         const postoutput = postDatas
         return postoutput
@@ -31,6 +31,14 @@ export class Post {
         const deletePost = await this.database.executeSQL(
             `DELETE FROM tweets WHERE tweets.id = ${postId} `
         )
+        
+    }
+
+    public likePost = async (postId: string) => {
+        const likePost = await this.database.executeSQL(
+            `UPDATE tweets SET post_like = post_like + 1 WHERE id = ${postId}`
+        )
+        
     }
 
 }

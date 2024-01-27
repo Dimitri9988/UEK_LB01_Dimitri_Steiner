@@ -30,6 +30,7 @@ export class API {
     this.app.post('/createPost', this.newPost);
     this.app.delete('/deletePost', this.deletePost);
     this.app.get('/getPost', this.getAllPost)
+    this.app.post('/like', this.postLike)
   }
 
 
@@ -47,6 +48,15 @@ export class API {
       res.status(200).json({ permission: permissionUser });
     });
   }
+  private postLike = (req: Request, res: Response) => {
+    bodyParser.json()(req, res, async () => {
+      const { postId } = req.body;
+      console.log(postId)
+      this.post.likePost(postId);
+    });
+  }
+
+
   private deletePost = (req: Request, res: Response) => {
     bodyParser.json()(req, res, async () => {
       const { postId } = req.body;

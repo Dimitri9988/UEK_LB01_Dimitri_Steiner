@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS tweets (
     id INT NOT NULL AUTO_INCREMENT,
     user_id INT NOT NULL,
     content VARCHAR(255) NOT NULL,
+    post_like INT NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

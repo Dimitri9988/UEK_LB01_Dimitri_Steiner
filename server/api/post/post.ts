@@ -24,8 +24,13 @@ export class Post {
             `SELECT users.id AS user_id, users.username as username, tweets.id AS tweet_id, tweets.content FROM users JOIN tweets ON users.id = tweets.user_id;`
         )
         const postoutput = postDatas
-        //console.log(postoutput)
         return postoutput
+    }
+
+    public deletePost = async (postId: string) => {
+        const deletePost = await this.database.executeSQL(
+            `DELETE FROM tweets WHERE tweets.id = ${postId} `
+        )
     }
 
 }

@@ -1,7 +1,41 @@
+const roletest = async () => {
+  jwtToken = localStorage.getItem('Token');
+
+  try {
+    const response = await fetch('http://localhost:4200/permission', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ jwtToken }), // Pass jwtToken as an object property
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      const { permission } = result;
+      if (permission === true) {
+        return true;
+      }
+      return false;
+    }
+    console.error('Fehler bei der Übertragung:', response.statusText);
+  } catch (error) {
+    console.error('Fehler beim Fetch:', error);
+  }
+};
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
+  
+
+
 
   const postWindow = document.getElementById('Feedwindow');
-
   const showTweets = async () => {
     try {
       const respons = await fetch('http://localhost:4200/getPost', {
@@ -13,13 +47,26 @@ document.addEventListener('DOMContentLoaded', () => {
       if (respons.ok) {
         const result = await respons.json();
         const { allpost } = result;
-        console.log(allpost);
-
-
-
+        const permissionsCheckResult = await roletest()
+        ;
         for (let i = 0; i < allpost.length; i++) {
-          const post = 
-          `
+          if (permissionsCheckResult === true) {
+            const post = `
+          <div class="dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4 w-1/2 mx-auto">
+            <div>
+                <span class="font-semibold text-white">${allpost[i].username}</span>
+            </div>
+            <p class="text-white">${allpost[i].content}</p>
+            <div class="mt-2">
+                <button class="text-blue-500 hover:underline">Like</button>
+                <button class="text-gray-500 hover:underline ml-2">Comment</button>
+                <button class="text-red-500 hover:underline ml-2" name="deleteButton" id="${allpost[i].tweet_id}">Delete</button>
+            </div>
+        </div>
+        `;
+            postWindow.innerHTML += post;
+          } else {
+            const post = `
           <div class="dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4 w-1/2 mx-auto">
             <div>
                 <span class="font-semibold text-white">${allpost[i].username}</span>
@@ -30,17 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="text-gray-500 hover:underline ml-2">Comment</button>
             </div>
         </div>
-        `
-        postWindow.innerHTML += post
+        `;
+            postWindow.innerHTML += post;
+          }
         }
-
-
-
-
-
-
-
-        console.log(allpost[0].username)
       } else {
         console.error('Fehler beim Auslesen der Posts', respons.statusText);
       }
@@ -48,15 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Fehler beim Laden der Tweets', error);
     }
   };
-  
   showTweets();
 
-
-
-
-
-
-
+  
 
 
 
@@ -79,6 +113,39 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (error) {
       console.error('Netzwerkfehler:', error);
+    }
+  });
+  document.getElementById('Feedwindow').addEventListener('click', async (event) => {
+    const target = event.target;
+    
+    if (target.classList.contains('text-red-500') && target.getAttribute('name') === 'deleteButton') {
+      
+      
+      
+      const postId = target.id;
+      
+      try {
+        const response = await fetch('http://localhost:4200/deletePost', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ postId }),
+        });
+        if (response.ok) {
+          console.log('DELET erfolgreich gespeichert');
+        } else {
+          console.error('Fehler bei der Löschung des Postes:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Netzwerkfehler:', error);
+      }
+
+
+
+
+
+
     }
   });
 });

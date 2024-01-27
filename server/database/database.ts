@@ -18,7 +18,7 @@ export class Database {
   }
   // Methods
   private initializeDBSchema = async () => {
-    console.log('Initializing DB schema...')
+    
     await this.executeSQL(USER_TABLE)
     await this.executeSQL(TWEET_TABLE)
     await this.executeSQL(USER_ROLE)

@@ -28,6 +28,7 @@ export class API {
     this.app.post('/register', this.registerUser);
     this.app.post('/permission', this.adminCheck);
     this.app.post('/createPost', this.newPost);
+    this.app.delete('/deletePost', this.deletePost);
     this.app.get('/getPost', this.getAllPost)
   }
 
@@ -41,12 +42,18 @@ export class API {
       const permission = new Permission(jwtToken);  
       
       const permissionUser = await permission.checkRolePermissions('testbutton');
-      console.log('Is Admin:', permissionUser);
+      
 
       res.status(200).json({ permission: permissionUser });
     });
   }
-
+  private deletePost = (req: Request, res: Response) => {
+    bodyParser.json()(req, res, async () => {
+      const { postId } = req.body;
+      console.log(postId)
+      this.post.deletePost(postId);
+    });
+  }
 
 
   private newPost = (req: Request, res: Response) => {
@@ -76,7 +83,6 @@ export class API {
     bodyParser.json()(req, res, async () => {
       try {
         const allpost = await this.post.getPost();
-        console.log(allpost);
         res.status(200).json({ allpost });
       } catch (error) {
         console.error('Fehler beim Abrufen aller Posts', error);
@@ -89,18 +95,16 @@ export class API {
   private checkUser = (req: Request, res: Response) => {
     bodyParser.json()(req, res, async () => {
       const { LoginPassword, LoginUsername } = req.body;
-
+  
       console.log('Benutzerüberprüfung für:', LoginUsername);
-      //console.log(require('crypto').randomBytes(64).toString('hex'))
-
+  
       // Hier überprüfen Sie, ob der Benutzer in der Datenbank existiert
       const userExists = await this.database.executeSQL(
         `SELECT * FROM users WHERE username = "${LoginUsername}" AND password = "${LoginPassword}"`
       );
-
+  
       if (userExists.length > 0) {
-        const token = jwt.sign({ username: LoginUsername }, process.env.TOKEN_SECRET, { expiresIn: '30m' });
-        //const decodedToken = jwt.decode(token);
+        const token = jwt.sign({ username: LoginUsername }, process.env.TOKEN_SECRET || '', { expiresIn: '30m' });
         res.status(200).json({ token: token });
       } else {
         res.status(404).send('Benutzer nicht gefunden');

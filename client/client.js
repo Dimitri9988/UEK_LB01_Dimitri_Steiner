@@ -5,34 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = `/${register}`;
   });
 
-  document.getElementById('AdminButton').addEventListener('click', async () => {
-    jwtToken = localStorage.getItem('Token');
-
-    try {
-      const response = await fetch('http://localhost:4200/permission', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ jwtToken }), // Pass jwtToken as an object property
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        const { permission } = result;
-        if (permission === true) {
-          console.log('You are an Admin');
-        } else {
-          console.log('You are not an admin');
-        }
-      } else {
-        console.error('Fehler bei der Übertragung:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Fehler beim Fetch:', error);
-    }
-  });
-
   document.getElementById('loginForm').addEventListener('submit', async (event) => {
     event.preventDefault();
 

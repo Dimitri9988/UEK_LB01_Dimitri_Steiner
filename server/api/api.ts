@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import bodyParser from 'body-parser'
 import { Permission } from './permissions/rolePermissionCheck'; 
 import { Post } from './post/post'
+import { Comment } from './comment/comment'
 
 // get config vars
 dotenv.config();
@@ -17,20 +18,25 @@ export class API {
   app: Express
   database: Database
   post: Post
+  comment: Comment
 
   // Constructor
   constructor(app: Express) {
     this.app = app
     this.database = new Database();
     this.post = new Post();
+    this.comment = new Comment();
 
     this.app.post('/login', this.checkUser);
     this.app.post('/register', this.registerUser);
     this.app.post('/permission', this.adminCheck);
     this.app.post('/createPost', this.newPost);
     this.app.delete('/deletePost', this.deletePost);
-    this.app.get('/getPost', this.getAllPost)
-    this.app.post('/like', this.postLike)
+    this.app.get('/getPost', this.getAllPost);
+    this.app.post('/like', this.postLike);
+    this.app.post('/dislike', this.postDislike);
+    this.app.post('/createComment', this.newComment);
+    this.app.get('/getComment', this.getComment)
   }
 
 
@@ -56,6 +62,14 @@ export class API {
     });
   }
 
+  private postDislike = (req: Request, res: Response) => {
+    bodyParser.json()(req, res, async () => {
+      const { postId } = req.body;
+      console.log(postId)
+      this.post.dislikePost(postId);
+    });
+  }
+
 
   private deletePost = (req: Request, res: Response) => {
     bodyParser.json()(req, res, async () => {
@@ -73,15 +87,17 @@ export class API {
     });
   }
 
+  private newComment = (req: Request, res: Response) => {
+    bodyParser.json()(req, res, async () => {
+      const { commentMessage, jwtToken, postId } = req.body;
+      this.comment.saveComment( commentMessage, jwtToken, postId);
+    });
+  }
+
+
   private registerUser = (req: Request, res: Response) => {
     bodyParser.json()(req, res, async () => {
       const { username, password, email } = req.body;
-  
-      console.log('Registrierungsdaten erhalten:');
-      console.log('Benutzername:', username);
-      console.log('Passwort:', password);
-      console.log('E-Mail:', email);
-
       await this.database.executeSQL(
         `INSERT INTO users (username, password, email, role) VALUES ("${username}", "${password}", "${email}", "User")`
       );
@@ -94,6 +110,19 @@ export class API {
       try {
         const allpost = await this.post.getPost();
         res.status(200).json({ allpost });
+      } catch (error) {
+        console.error('Fehler beim Abrufen aller Posts', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+      }
+    });
+  }
+
+  private getComment = async (req: Request, res: Response) => {
+    bodyParser.json()(req, res, async () => {
+      try {
+        const allcomment = await this.comment.getComment();
+        console.log(allcomment)
+        res.status(200).json({ allcomment });
       } catch (error) {
         console.error('Fehler beim Abrufen aller Posts', error);
         res.status(500).json({ error: 'Internal Server Error' });

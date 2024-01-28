@@ -41,4 +41,16 @@ CREATE TABLE IF NOT EXISTS tweets (
 );
 `
 
-export { USER_TABLE, TWEET_TABLE, USER_ROLE, adminRoleQuery, userRoleQuery }
+const COMMENT_TABLE = `
+CREATE TABLE IF NOT EXISTS comment (
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    tweet_id INT NOT NULL,
+    comment_content VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (tweet_id) REFERENCES tweets(id)
+);
+`
+
+export { USER_TABLE, TWEET_TABLE, USER_ROLE, adminRoleQuery, userRoleQuery, COMMENT_TABLE }

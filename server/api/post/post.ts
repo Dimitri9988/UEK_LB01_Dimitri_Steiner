@@ -41,4 +41,11 @@ export class Post {
         
     }
 
+    public dislikePost = async (postId: string) => {
+        const dislikePost = await this.database.executeSQL(
+            `UPDATE tweets SET post_like = post_like - 1 WHERE id = ${postId}`
+        )
+        
+    }
+
 }

@@ -121,7 +121,6 @@ export class API {
     bodyParser.json()(req, res, async () => {
       try {
         const allcomment = await this.comment.getComment();
-        console.log(allcomment)
         res.status(200).json({ allcomment });
       } catch (error) {
         console.error('Fehler beim Abrufen aller Posts', error);

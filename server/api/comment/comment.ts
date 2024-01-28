@@ -8,15 +8,20 @@ export class Comment {
         this.database = new Database();
     }
 
-    public saveComment = async (message: string, token: any, post_id: Number) => {
+    public saveComment = async (message: string, token: any, post_id: number) => {
         const decodedToken = jwt.decode(token);
-        const username = decodedToken.username;
-
-        const userId = await this.database.executeSQL(`SELECT id From users WHERE username = "${username}"`);
-        await this.database.executeSQL(
-            `INSERT INTO comment( user_id, tweet_id, comment_content) VALUES (${userId[0].id},${post_id},"${message}")`
-        )
-          
+    
+        if (decodedToken && typeof decodedToken === 'object' && 'username' in decodedToken) {
+            const username = decodedToken.username;
+    
+            const userId = await this.database.executeSQL(`SELECT id From users WHERE username = "${username}"`);
+            await this.database.executeSQL(
+                `INSERT INTO comment( user_id, tweet_id, comment_content) VALUES (${userId[0].id},${post_id},"${message}")`
+            );
+        } else {
+            // Handle the case when decodedToken is null or not an object with 'username'
+            console.error('Invalid token or missing username in decodedToken.');
+        }
     }
 
     public getComment = async () => {

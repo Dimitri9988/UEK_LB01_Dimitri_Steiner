@@ -1,10 +1,7 @@
 const urlParams = new URLSearchParams(window.location.search);
 const postId = urlParams.get('postId');
 document.addEventListener('DOMContentLoaded', () => {
-
-
-
-
+  const commentWindow = document.getElementById('commentWindow');
 
   const showTweets = async () => {
     try {
@@ -17,55 +14,27 @@ document.addEventListener('DOMContentLoaded', () => {
       if (respons.ok) {
         const result = await respons.json();
         const { allcomment } = result;
-        console.log(allcomment)
+        console.log(allcomment);
 
         for (let i = 0; i < allcomment.length; i++) {
-          
-          
           if (postId === `${allcomment[i].tweet_id}`) {
-            console.log(allcomment[i])
+            commentWindow.innerHTML
+            += `
+            <div class="flex items-center mb-2 dark:bg-gray-800 p-2  p-4 rounded-lg shadow-md mb-4 w-1/2 mx-auto">
+            <div>
+              <span class="text-white font-semibold">${allcomment[i].username}</span> <!-- Benutzername des Kommentators -->
+              <p class="text-white">${allcomment[i].comment_content}</p> <!-- Kommentarinhalt -->
+            </div>
+          </div>
+            `;
           }
-
-          
         }
-
       }
     } catch (error) {
       console.error('Fehler beim Laden der Tweets', error);
     }
   };
   showTweets();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   const showTweet = async () => {
     try {
@@ -82,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (`${allpost[i].tweet_id}` === postId) {
             const postWindow = document.getElementById('postWindow');
             postWindow.innerHTML = `
-                <div id="Feedwindow" class="w-full  bg-gradient-to-r rounded-lg mb-1/2">
+                <div id="Feedwindow" class="w-full bg-gradient-to-r rounded-lg ">
                     <div class="dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4 w-1/2 mx-auto">
                         <div>
                             <span class="font-semibold text-white">${allpost[i].username}</span>
@@ -106,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('postCommentButton').addEventListener('click', async (event) => {
     event.preventDefault();
+    console.log("cenifcwefo aefboa")
     const commentMessage = document.getElementById('commentTextarea').value;
     const jwtToken = localStorage.getItem('Token');
     try {

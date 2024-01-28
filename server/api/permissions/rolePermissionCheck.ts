@@ -16,7 +16,7 @@ export class Permission {
             const username = manuallyDefinedUsername || decodedToken.username;
             
             const userrole = await this.database.executeSQL(`SELECT role From users WHERE username = "${username}"`);
-            console.log[0]
+
             if (userrole[0] && userrole[0].role) {
                 const check = await this.database.executeSQL(`SELECT ${role} FROM roles_permissions WHERE rolename = "${userrole[0].role}"`);
                 const roleValue = check[0][role];

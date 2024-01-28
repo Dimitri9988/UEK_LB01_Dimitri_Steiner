@@ -19,7 +19,6 @@ export class Comment {
                 `INSERT INTO comment( user_id, tweet_id, comment_content) VALUES (${userId[0].id},${post_id},"${message}")`
             );
         } else {
-            // Handle the case when decodedToken is null or not an object with 'username'
             console.error('Invalid token or missing username in decodedToken.');
         }
     }

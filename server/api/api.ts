@@ -48,7 +48,7 @@ export class API {
 
       const permission = new Permission(jwtToken);  
       
-      const permissionUser = await permission.checkRolePermissions('testbutton');
+      const permissionUser = await permission.checkRolePermissions('deletAllPost');
       
 
       res.status(200).json({ permission: permissionUser });

@@ -13,17 +13,17 @@ const USER_ROLE = `
 CREATE TABLE IF NOT EXISTS roles_permissions (
     id INT NOT NULL AUTO_INCREMENT,
     rolename VARCHAR(255) NOT NULL,
-    testbutton BOOLEAN NOT NULL,
+    deletAllPost BOOLEAN NOT NULL,
     PRIMARY KEY (id)
 );
 `;
 const adminRoleQuery = `
-    INSERT IGNORE INTO roles_permissions (rolename, testbutton)
+    INSERT IGNORE INTO roles_permissions (rolename, deletAllPost)
     VALUES ('Admin', true);
 `;
 
 const userRoleQuery = `
-    INSERT IGNORE INTO roles_permissions (rolename, testbutton)
+    INSERT IGNORE INTO roles_permissions (rolename, deletAllPost)
     VALUES ('User', false);
 `;
 

@@ -10,13 +10,16 @@ export class Post {
 
     public savePost = async (message: string, token: any) => {
         const decodedToken = jwt.decode(token);
-        const username = `${decodedToken.username}`;
+        if (decodedToken && typeof decodedToken === 'object' && 'username' in decodedToken) {
+            const username = `${decodedToken.username}`;
         
-        const userId = await this.database.executeSQL(`SELECT id From users WHERE username = "${username}"`);
-        await this.database.executeSQL(
-            `INSERT INTO tweets (user_id, content, post_like) VALUES (${userId[0].id}, "${message}", 0)`
-        )
-          
+            const userId = await this.database.executeSQL(`SELECT id From users WHERE username = "${username}"`);
+            await this.database.executeSQL(
+                `INSERT INTO tweets (user_id, content, post_like) VALUES (${userId[0].id}, "${message}", 0)`
+            )
+        } else {
+            console.error('Invalid token or missing username in decodedToken.');
+        }   
     }
 
     public getPost = async () => {
@@ -29,9 +32,7 @@ export class Post {
 
     public deletePost = async (postId: string) => {
         const deleteCommentPost = await this.database.executeSQL(`DELETE FROM comment WHERE tweet_id = ${postId}`)
-        const deletePost = await this.database.executeSQL(
-            `DELETE FROM tweets WHERE tweets.id = ${postId} `
-        )
+        const deletePost = await this.database.executeSQL(`DELETE FROM tweets WHERE tweets.id = ${postId} `)
         
     }
 

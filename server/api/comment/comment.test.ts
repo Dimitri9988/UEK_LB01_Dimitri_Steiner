@@ -18,7 +18,6 @@ describe('Comment', () => {
 
   describe('getComment', () => {  
     it('should retrieve comments from the database', async () => {
-      // Mock the executeSQL method
       (comment.database.executeSQL as jest.Mock).mockResolvedValue([
         { user_id: 1, comment_id: 1, tweet_id: 1, username: 'testUser', comment_content: 'Test comment' },
       ]);

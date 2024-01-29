@@ -1,6 +1,5 @@
 import * as jwt from 'jsonwebtoken';
 import { Database } from '../../database/database';
-import { urlencoded } from 'body-parser';
 
 export class Permission {
     private jwtToken: any;
